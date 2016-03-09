@@ -38,7 +38,7 @@ module EasyResource
     def destroy
       object = resource
       object.destroy
-      respond_with(object, location: redirect_location)
+      respond_with(object, location: polymorphic_path([namespace, resource_class]))
     end
 
     private
