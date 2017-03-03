@@ -35,10 +35,14 @@ module EasyResource
     # DELETE /resources/1
     def destroy
       resource.destroy
-      respond_with(resource, location: redirect_location)
+      respond_with(resource, location: redirect_collection)
     end
 
     private
+
+    def redirect_collection
+      polymorphic_path([namespace, resource_class])
+    end
 
     def redirect_location
       polymorphic_path([namespace, resource])
