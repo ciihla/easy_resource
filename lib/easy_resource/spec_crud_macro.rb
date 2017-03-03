@@ -9,14 +9,6 @@ module EasyResource
       meth.to_s.classify.constantize
     end
 
-    def directory(meth)
-      assigns(meth.to_s.pluralize)
-    end
-
-    def object_assign(meth)
-      assigns(meth)
-    end
-
     module ClassMethods
       def crud_spec(model_name, options = {})
         let(:model) { options[:model] ? send(options[:model]) : FactoryGirl.create(model_name) }
@@ -35,18 +27,18 @@ module EasyResource
             instance = model
             get :index
             expect(response).to be_success
-            expect(directory(model_name)).to include(instance)
+            expect(assigns(:collection)).to include(instance)
           end
         end
       end
 
-      def show_action(model_name)
+      def show_action(_model_name)
         describe 'GET show' do
           it 'assigns a new model_name as @instance and render show' do
             instance = model
-            get :show, id: instance.to_param
+            get :show, params: { id: instance.to_param }
             expect(response).to be_success
-            expect(assigns(model_name)).to eq(instance)
+            expect(assigns(:resource)).to eq(instance)
             expect(response).to render_template('show')
           end
         end
@@ -57,7 +49,7 @@ module EasyResource
           it 'assigns a new model_name as @instance' do
             get :new
             expect(response).to be_success
-            expect(object_assign(model_name)).to be_a_new(klass(model_name))
+            expect(assigns(:resource)).to be_a_new(klass(model_name))
           end
         end
       end
@@ -66,9 +58,9 @@ module EasyResource
         describe 'GET edit' do
           it 'assigns the requested model_name as @instance' do
             instance = model
-            get :edit, id: instance.to_param
+            get :edit, params: { id: instance.to_param }
             expect(response).to be_success
-            expect(assigns(model_name)).to eq(instance)
+            expect(assigns(:resource)).to eq(instance)
             expect(response).to render_template('edit')
           end
         end
@@ -79,30 +71,30 @@ module EasyResource
           describe 'with valid params' do
             it "creates a new #{model_name.capitalize}" do
               expect do
-                post :create, model_name => valid_attributes
+                post :create, params: { model_name => valid_attributes }
               end.to change(klass(model_name), :count).by(1)
             end
 
             it 'assigns a newly created model_name as @instance' do
-              post :create, model_name => valid_attributes
-              expect(object_assign(model_name)).to be_a(klass(model_name))
-              expect(object_assign(model_name)).to be_persisted
+              post :create, params: { model_name => valid_attributes }
+              expect(assigns(:resource)).to be_a(klass(model_name))
+              expect(assigns(:resource)).to be_persisted
             end
 
             it 'redirects to the created instance' do
-              post :create, model_name => valid_attributes
+              post :create, params: { model_name => valid_attributes }
               expect(response).to be_redirect
             end
           end
 
           describe 'with invalid params' do
             it 'assigns a newly created but unsaved model_name as @instance' do
-              post :create, model_name => invalid_attributes
-              expect(object_assign(model_name)).to be_a_new(klass(model_name))
+              post :create, params: { model_name => invalid_attributes }
+              expect(assigns(:resource)).to be_a_new(klass(model_name))
             end
 
             it "re-renders the 'new' instance" do
-              post :create, model_name => invalid_attributes
+              post :create, params: { model_name => invalid_attributes }
               expect(response).to render_template('new')
             end
           end
@@ -114,7 +106,7 @@ module EasyResource
           describe 'with valid params' do
             it 'updates the requested instance' do
               instance = model
-              put :update, id: instance.to_param, model_name => new_attributes
+              put :update, params: {  id: instance.to_param, model_name => new_attributes }
               instance.reload
               new_attributes.each do |key, val|
                 expect(instance.send(key)).to eq(val)
@@ -122,13 +114,13 @@ module EasyResource
             end
 
             it 'assigns the requested model_name as @instance' do
-              put :update, id: model.to_param, model_name => valid_attributes
-              expect(object_assign(model_name)).to eq(model)
+              put :update, params: { id: model.to_param, model_name => valid_attributes }
+              expect(assigns(:resource)).to eq(model)
             end
 
             it 'redirects to the instance' do
               instance = model
-              put :update, id: instance.to_param, model_name => valid_attributes
+              put :update, params: { id: instance.to_param, model_name => valid_attributes }
               expect(response).to be_redirect
             end
           end
@@ -136,13 +128,13 @@ module EasyResource
           describe 'with invalid params' do
             it 'assigns the model_name as @instance' do
               instance = model
-              put :update, id: instance.to_param, model_name => invalid_attributes
-              expect(object_assign(model_name)).to eq(instance)
+              put :update, params: { id: instance.to_param, model_name => invalid_attributes }
+              expect(assigns(:resource)).to eq(instance)
             end
 
             it "re-renders the 'edit' instance" do
               if invalid_attributes.present?
-                put :update, id: model.to_param, model_name => invalid_attributes
+                put :update, params: { id: model.to_param, model_name => invalid_attributes }
                 expect(response).to render_template('edit')
               end
             end
@@ -154,11 +146,11 @@ module EasyResource
         describe 'DELETE destroy' do
           it 'deletes a instance' do
             instance = model
-            expect { delete :destroy, id: instance.id }.to change { klass(model_name).count }.by(-1)
+            expect { delete :destroy, params: { id: instance.id } }.to change { klass(model_name).count }.by(-1)
           end
 
           it 'redirects to index' do
-            delete :destroy, id: model.id
+            delete :destroy, params: { id: model.id }
             expect(response).to be_redirect
           end
         end

@@ -22,23 +22,20 @@ module EasyResource
 
     # POST /resources
     def create
-      object = build_resource
-      object.save
-      respond_with(object, location: redirect_location)
+      build_resource.save
+      respond_with(resource, location: redirect_location)
     end
 
     # PUT /resources/1
     def update
-      object = resource
-      object.update_attributes(resource_params)
-      respond_with(object, location: redirect_location)
+      resource.update_attributes(resource_params)
+      respond_with(resource, location: redirect_location)
     end
 
     # DELETE /resources/1
     def destroy
-      object = resource
-      object.destroy
-      respond_with(object, location: redirect_location)
+      resource.destroy
+      respond_with(resource, location: redirect_location)
     end
 
     private
