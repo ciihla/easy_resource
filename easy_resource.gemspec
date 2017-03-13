@@ -8,7 +8,7 @@ Gem::Specification.new do |spec|
   spec.version = EasyResource::VERSION.dup
   spec.authors = ['Jan Uhlar']
 
-  spec.summary  = %q{Makes it easy to handle CRUD actions in controller}
+  spec.summary  = 'Makes it easy to handle CRUD actions in controller'
   spec.homepage = 'http://github.com/ciihla/easy_resource'
   spec.license  = 'MIT'
 

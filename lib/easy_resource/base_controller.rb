@@ -4,10 +4,18 @@ module EasyResource
 
     included do
       include EasyResource::Actions
+      include EasyResource::HtmlTitle
       self.responder = EasyResource::Responder
       helper_method :resource, :resource_class, :collection, :namespace
 
       respond_to :html if mimes_for_respond_to.empty?
+
+      prepare_html_title index:  ->(c) { c.resource_class.model_name.human.pluralize.to_s },
+                         new:    ->(c) { "New #{c.resource_class.model_name.human}" },
+                         create: ->(c) { "New #{c.resource_class.model_name.human}" },
+                         edit:   ->(c) { "Editing #{c.resource_class.model_name.human}" },
+                         update: ->(c) { "Editing #{c.resource_class.model_name.human}" },
+                         show:   ->(c) { c.resource_class.model_name.human.to_s }
     end
 
     private

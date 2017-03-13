@@ -22,7 +22,7 @@ module EasyResource
         end
       end
 
-      def index_action(model_name, xhr)
+      def index_action(_model_name, xhr)
         describe 'GET index' do
           it 'assigns all instances as results' do
             instance = model
@@ -55,7 +55,7 @@ module EasyResource
         end
       end
 
-      def edit_action(model_name, xhr)
+      def edit_action(_model_name, xhr)
         describe 'GET edit' do
           it 'assigns the requested model_name as @instance' do
             instance = model
