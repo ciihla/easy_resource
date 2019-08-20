@@ -27,7 +27,7 @@ module EasyResource
           it 'assigns all instances as results' do
             instance = model
             get :index, xhr: xhr
-            expect(response).to be_success
+            expect(response).to be_successful
             expect(assigns(:collection)).to include(instance)
           end
         end
@@ -38,7 +38,7 @@ module EasyResource
           it 'assigns a new model_name as @instance and render show' do
             instance = model
             get :show, xhr: xhr, params: { id: instance.to_param }
-            expect(response).to be_success
+            expect(response).to be_successful
             expect(assigns(:resource)).to eq(instance)
             expect(response).to render_template('show')
           end
@@ -49,7 +49,7 @@ module EasyResource
         describe 'GET new' do
           it 'assigns a new model_name as @instance' do
             get :new, xhr: xhr
-            expect(response).to be_success
+            expect(response).to be_successful
             expect(assigns(:resource)).to be_a_new(klass(model_name))
           end
         end
@@ -60,7 +60,7 @@ module EasyResource
           it 'assigns the requested model_name as @instance' do
             instance = model
             get :edit, xhr: xhr, params: { id: instance.to_param }
-            expect(response).to be_success
+            expect(response).to be_successful
             expect(assigns(:resource)).to eq(instance)
             expect(response).to render_template('edit')
           end

@@ -28,7 +28,7 @@ module EasyResource
 
     # PUT /resources/1
     def update
-      resource.update_attributes(resource_params)
+      resource.update(resource_params)
       respond_with(resource, location: redirect_location)
     end
 
