@@ -56,12 +56,12 @@ Then you can test your controller:
 
 ```ruby
 RSpec.describe Admin::UsersController, type: :controller do
-  let(:valid_attributes) { FactoryGirl.attributes_for(:user) }
+  let(:valid_attributes) { FactoryBot.attributes_for(:user) }
   let(:invalid_attributes) { { name: '' } }
   let(:new_attributes) { { name: 'Updated' } }
 
   context 'signed_in ' do
-    let(:admin) { FactoryGirl.create(:admin) }
+    let(:admin) { FactoryBot.create(:admin) }
     before(:each) { sign_in(admin) }
     crud_spec(:user)
   end

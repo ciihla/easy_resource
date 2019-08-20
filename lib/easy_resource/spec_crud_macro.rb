@@ -11,7 +11,7 @@ module EasyResource
 
     module ClassMethods
       def crud_spec(model_name, options = {})
-        let(:model) { options[:model] ? send(options[:model]) : FactoryGirl.create(model_name) }
+        let(:model) { options[:model] ? send(options[:model]) : FactoryBot.create(model_name) }
         options.reverse_merge!(exclude_actions: [], xhr_actions: false)
 
         context 'crud spec' do
